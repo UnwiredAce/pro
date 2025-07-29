@@ -1,5 +1,8 @@
 local typing = false
 local printedCommand = ""
+local savedCommands = {}
+
+local yOffset = 10
 function love.load()
     inputText = ""
     love.keyboard.setKeyRepeat(true)
@@ -18,6 +21,8 @@ function love.keypressed(key)
     elseif key == "return" then
         typing = false
         printedCommand = inputText
+        yOffset = yOffset + 20
+        table.insert(savedCommands, printedCommand)
         print("User typed: " .. inputText)
     end
 end
@@ -25,6 +30,7 @@ end
 function love.draw()
     love.graphics.print("Command:", 10, 10)
     love.graphics.print("Printed - Command:" .. printedCommand, 10, 30)
+        love.graphics.print(printedCommand, 400, yOffset)
     if not typing then
         love.graphics.print("Waiting for commands", 80, 10)
     else
