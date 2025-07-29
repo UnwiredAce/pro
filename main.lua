@@ -1,29 +1,33 @@
-local commands = {"search","help","inventory"}
-local scriptCommand = "No command"
-
 local typing = false
-
-local function scripting()
-    if typing then
-        
-    end
-end
+local printedCommand = ""
 function love.load()
-    
+    inputText = ""
+    love.keyboard.setKeyRepeat(true)
 end
 
-function love.update(dt)
-    if love.keyboard.isDown('space') and not typing then
-        scriptCommand = "Waiting for command"
+function love.textinput(t)
+    inputText = inputText .. t
+end
+
+function love.keypressed(key)
+    if key == "backspace" then
+        inputText = string.sub(inputText, 1, 0)
+        printedCommand = string.sub(printedCommand, 1, 0)
+    elseif key == "space" then
         typing = true
-    end
-    if love.keyboard.isDown('escape') and typing then
+    elseif key == "return" then
         typing = false
-        scriptCommand = "No command"
+        printedCommand = inputText
+        print("User typed: " .. inputText)
     end
-    scripting()
 end
 
 function love.draw()
-    love.graphics.print("Command: " .. scriptCommand)
+    love.graphics.print("Command:", 10, 10)
+    love.graphics.print("Printed - Command:" .. printedCommand, 10, 30)
+    if not typing then
+        love.graphics.print("Waiting for commands", 80, 10)
+    else
+        love.graphics.print(inputText, 80, 10)
+    end
 end
